@@ -22,12 +22,12 @@ ragServer:
       APP_LLM_SERVERURL: "nim-llm:8000"
       APP_LLM_MODELNAME: meta/llama-3.1-70b-instruct
       APP_LLM_MODELENGINE: nvidia-ai-endpoints
-      APP_EMBEDDINGS_SERVERURL: https://nemo-embedding-ms-rag.apps.ai-dev04.kni.syseng.devcluster.openshift.com
+      APP_EMBEDDINGS_SERVERURL: "nemo-embedding-ms:8000"
       APP_EMBEDDINGS_MODELNAME: nvidia/llama-3.2-nv-embedqa-1b-v2
       APP_EMBEDDINGS_MODELENGINE: nvidia-ai-endpoints
       APP_RANKING_MODELNAME: nvidia/llama-3.2-nv-rerankqa-1b-v2
       APP_RANKING_MODELENGINE: nvidia-ai-endpoints
-      APP_RANKING_SERVERURL: https://nemo-ranking-ms-rag.apps.ai-dev04.kni.syseng.devcluster.openshift.com
+      APP_RANKING_SERVERURL: "nemo-ranking-ms:8000"
       APP_TEXTSPLITTER_MODELNAME: nvidia/llama-3.2-nv-embedqa-1b-v1
       APP_TEXTSPLITTER_CHUNKSIZE: 2000
       APP_TEXTSPLITTER_CHUNKOVERLAP: 200
