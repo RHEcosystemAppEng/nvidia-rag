@@ -49,7 +49,7 @@ extraVolumeMounts: {}
 ## @param image.tag [string] Specifies the image tag or version.
 ## @param image.pullPolicy [string] Sets the image pull policy.
 image:
-  repository: nvcr.io/nim/meta/llama-3.1-8b-instruct
+  repository: nvcr.io/nim/meta/llama-3.1-70b-instruct
   pullPolicy: IfNotPresent
   # Tag overrides the image tag whose default is the chart appVersion.
   tag: "1.3.3"
@@ -280,7 +280,7 @@ metrics:
 ## @param nim.logLevel Log level of NIM service. Possible values of the variable are TRACE, DEBUG, INFO, WARNING, ERROR, CRITICAL.
 nim:
   nimCache: /opt/nim/.cache
-  modelName: 'llama-3.1-8b-instruct'
+  modelName: 'llama-3.1-70b-instruct'
   modelVersion: 1.3.3
   ngcAPISecret: ngc-api
   ngcAPIKey: ''
@@ -349,7 +349,7 @@ persistence:
   stsPersistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
-  size: 50Gi  # size of claim in bytes (for example 8Gi)
+  size: 100Gi  # size of claim in bytes (for example 8Gi)
   annotations: {}
 
 ## @extra hostPath Configures model cache on local disk on the nodes using `hostPath` -- for special cases. You should understand the security implications before using this option.

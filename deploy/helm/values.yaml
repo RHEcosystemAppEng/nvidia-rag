@@ -20,14 +20,16 @@ ragServer:
       APP_VECTORSTORE_INDEXTYPE: GPU_CAGRA
       COLLECTION_NAME: nvidia_blogs
       APP_LLM_SERVERURL: "nim-llm:8000"
-      APP_LLM_MODELNAME: meta/llama-3.1-70b-instruct
+      APP_LLM_MODELNAME: meta/llama3-8b-instruct
+      #APP_LLM_MODELNAME: meta/llama-3.1-70b-instruct
+      #APP_LLM_APIKEY="" # Add API key to access the LLM
       APP_LLM_MODELENGINE: nvidia-ai-endpoints
-      APP_EMBEDDINGS_SERVERURL: https://nemo-embedding-ms-rag.apps.ai-dev04.kni.syseng.devcluster.openshift.com
+      APP_EMBEDDINGS_SERVERURL: "nemo-embedding-ms:8000"
       APP_EMBEDDINGS_MODELNAME: nvidia/llama-3.2-nv-embedqa-1b-v2
       APP_EMBEDDINGS_MODELENGINE: nvidia-ai-endpoints
       APP_RANKING_MODELNAME: nvidia/llama-3.2-nv-rerankqa-1b-v2
       APP_RANKING_MODELENGINE: nvidia-ai-endpoints
-      APP_RANKING_SERVERURL: https://nemo-ranking-ms-rag.apps.ai-dev04.kni.syseng.devcluster.openshift.com
+      APP_RANKING_SERVERURL: "nemo-ranking-ms:8000"
       APP_TEXTSPLITTER_MODELNAME: nvidia/llama-3.2-nv-embedqa-1b-v1
       APP_TEXTSPLITTER_CHUNKSIZE: 2000
       APP_TEXTSPLITTER_CHUNKOVERLAP: 200
@@ -60,7 +62,7 @@ ragPlayground:
   env:
       APP_SERVERURL: "http://rag-server"
       APP_SERVERPORT: 8081
-      APP_MODELNAME: meta/llama-3.1-70b-instruct
+      APP_MODELNAME: meta/llama3-8b-instruct
   service:
       type: NodePort
       targetPort: 8090
@@ -97,22 +99,22 @@ nim-llm:
   service:
     name: "nim-llm"
   image:
-      repository:  nvcr.io/nim/meta/llama-3.1-8b-instruct
+      repository:  nvcr.io/nim/meta/llama3-8b-instruct
       pullPolicy: IfNotPresent
-      tag: "1.3.3"
+      tag: "1.0.3"
   resources:
     limits:
-      cpu: '6'
+      cpu: '16'
       memory: 24Gi
       nvidia.com/gpu: '1'
     requests:
-      cpu: '4'
+      cpu: '8'
       memory: 16Gi
       nvidia.com/gpu: '1'
   nim:
     ngcAPIKey: ""
     modelName: 'llama-3.1-8b-instruct'
-    modelVersion: 1.3.3
+    modelVersion: 1.0.3
 
 text-reranking-nim:
   acceleratorName: nvidia.com/gpu
