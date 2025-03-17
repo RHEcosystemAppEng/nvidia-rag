@@ -1,0 +1,32 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: {{ include "text-reranking-nim.fullname" . }}
+    serving.knative.openshift.io/enablePassthrough: 'true'
+    serving.kserve.io/deploymentMode: Serverless
+    sidecar.istio.io/inject: 'true'
+    sidecar.istio.io/rewriteAppHTTPProbers: 'true'
+  name: {{ include "text-reranking-nim.fullname" . }}
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    maxReplicas: {{ .Values.replicaCount }}
+    minReplicas: {{ .Values.replicaCount }}
+    model:
+      modelFormat:
+        name: {{ .Values.nim.modelName }}
+      name: ''
+      resources:
+        {{- toYaml .Values.resources | nindent 8 }}
+      runtime: {{ include "text-reranking-nim.fullname" . }}
+    # tolerations:
+    #   - effect: NoSchedule
+    #     key: g5-gpu
+    #     operator: Exists
+
+    {{- with .Values.tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}

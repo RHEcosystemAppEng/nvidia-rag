@@ -1,0 +1,61 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/accelerator-name: {{ .Values.acceleratorName }}
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: NVIDIA NIM
+    opendatahub.io/template-name: nvidia-nim-runtime
+    openshift.io/display-name: {{ include "nvidia-nim-llama-32-nv-embedqa-1b-v2.fullname" . }}
+    runtimes.opendatahub.io/nvidia-nim: 'true'
+  name: {{ include "nvidia-nim-llama-32-nv-embedqa-1b-v2.fullname" . }}
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: '8000'
+    serving.knative.dev/progress-deadline: 30m
+  containers:
+    - env:
+        - name: NIM_CACHE_PATH
+          value:  {{ .Values.nim.nimCache }}
+        - name: NGC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: NGC_API_KEY
+              name: nvidia-nim-secrets
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      name: kserve-container
+      ports:
+        - containerPort: 8000
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
+        - mountPath: {{ .Values.nim.nimCache }}
+          name: {{ include "nvidia-nim-llama-32-nv-embedqa-1b-v2.fullname" . }}
+{{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+  # imagePullSecrets:
+  #   - name: ngc-secret
+  multiModel: false
+  protocolVersions:
+    - grpc-v2
+    - v2
+  supportedModelFormats:
+    - autoSelect: false
+      name: {{ .Values.nim.modelName }}
+      priority: 1
+      version: {{ .Values.nim.modelVersion }}
+  volumes:
+    - name: {{ include "nvidia-nim-llama-32-nv-embedqa-1b-v2.fullname" . }}
+      persistentVolumeClaim:
+        claimName: {{ include "nvidia-nim-llama-32-nv-embedqa-1b-v2.fullname" . }}
+    - emptyDir:
+        medium: Memory
+        sizeLimit: {{ .Values.shmSize }}
+      name: shm
